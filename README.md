@@ -50,7 +50,7 @@ The battery name to display info.
 Defaultly, the plugin finds the first battery in the power supply
 device named as `BAT.*`. (eg. `BAT0`)
 
-# Capacity threshold
+### Capacity threshold
 - `@sysbat-capacity-threshold0` (default: `15`)
 - `@sysbat-capacity-threshold1` (default: `30`)
 - `@sysbat-capacity-threshold2` (default: `70`)
@@ -65,7 +65,7 @@ Defaultly, the battery capacity is classified as
 - `15~29%` (low) 
 - `~14%` (very low)
 
-# Simple threshold
+### Simple threshold
 - `@sysbat-simple-threshold` (default: `90`)
 The plugin has 2 formats: normal, simple.
 
@@ -74,7 +74,7 @@ displays the simple format like responsive design.
 
 The default is 90 ascii characters.
 
-# Normal format
+### Normal format
 - `@sysbat-normal-fmt0`: The battery is full
 - `@sysbat-normal-fmt1`: The battery is charging (AC power connected)
 - `@sysbat-normal-fmt2`: The battery is not charging
@@ -87,7 +87,7 @@ The default is 90 ascii characters.
 The indicator format when tmux window width is same as or larger than
 `@sysbat-simple-threshold`.
 
-# Simple format
+### Simple format
 - `@sysbat-normal-fmt0`: The battery is full
 - `@sysbat-normal-fmt1`: The battery is charging (AC power connected)
 - `@sysbat-normal-fmt2`: The battery is not charging
