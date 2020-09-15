@@ -33,7 +33,7 @@ run-shell '$HOME/.tmux/scripts/tmux-sysfs-battery/load.tmux'
 ```
 
 ## How to use
-Just add `#{linux-sysfs-battery}` in favorite places of following
+Just add `#{tmux-sysfs-battery}` in favorite places of following
 tmux status bar format options.
 
 - `status-left`, `status-right`
