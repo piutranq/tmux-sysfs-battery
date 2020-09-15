@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# ==================================================================
+#   tmux-sysfs-battery/config
+#   Read the tmux options for the plugin, and export the configs.
+# ==================================================================
+
+# Color aliases
+declare -r co0="black";     declare -r co8="brightblack"
+declare -r co1="red";       declare -r co9="brightred"
+declare -r co2="green";     declare -r coA="brightgreen"
+declare -r co3="yellow";    declare -r coB="brightyellow"
+declare -r co4="blue";      declare -r coC="brightblue"
+declare -r co5="magenta";   declare -r coD="brightmagenta"
+declare -r co6="cyan";      declare -r coE="brightcyan"
+declare -r co7="white";     declare -r coF="brightwhite"
+
+# Functions
+function tget() {
+    local option="$(tmux show-option -gqv "$1")"
+    [[ -z "$option" ]] && echo "$2" || echo "$option"
+}
+function battery-auto-detect() {
+    echo "$(ls "/sys/class/power_supply/" | grep -e "BAT.*" \
+            | head -n1 | awk -F" -> " '{print $1}')"
+}
+
+# Default options
+declare -r default_battery_name="$(battery-auto-detect)"
+declare -r default_bat_threshold=("15", "30", "75")
+declare -r default_simple_threshold="90"
+declare -r default_normal_fmt=(
+    "#[fg=${coF},bg=${co0},bold  ] FULL #[default] "
+    "#[fg=${co0},bg=${coA},bold  ] - #{capacity} #[default]"
+    "#[fg=${coB},bg=${co0},nobold] = #{capacity} #[default]"
+    "#[fg=${co7},bg=${co0},nobold] - #{capacity} #[default]"
+    "#[fg=${co7},bg=${co0},nobold] - #{capacity} #[default]"
+    "#[fg=${co8},bg=${coB},bold  ] - #{capacity} #[default]"
+    "#[fg=${co8},bg=${co9},bold  ] - #{capacity} #[default]"
+    "#[fg=${co8},bg=${co0},bold  ] ? #{capacity} #[default]"
+)
+declare -r default_simple_fmt=(
+    "#[default]"
+    "#[fg=${co0},bg=${coA},bold  ] + #[default]"
+    "#[fg=${coB},bg=${co0},nobold] = #[default]"
+    "#[fg=${co7},bg=${co0},nobold] - #[default]"
+    "#[fg=${co7},bg=${co0},nobold] - #[default]"
+    "#[fg=${co8},bg=${coB},bold  ] - #[default]"
+    "#[fg=${co8},bg=${co9},bold  ] - #[default]"
+    "#[fg=${co8},bg=${co0},bold  ] ? #[default]"
+)
+
+# Read tmux options and export the configuration
+export conf_batname=(
+    "$(tget "@sysbat-battery-name" "$default_battery_name")"
+)
+export conf_bat_threshold=(
+    "$(tget "@sysbat-capacity-threshold0" "$default_bat_threshold[0]")"
+    "$(tget "@sysbat-capacity-threshold1" "$default_bat_threshold[1]")"
+    "$(tget "@sysbat-capacity-threshold2" "$default_bat_threshold[2]")"
+)
+export conf_simple_threshold=(
+    "$(tget "@sysbat-simple-threshold" "$default_simple_threshold")"
+)
+export conf_normal_fmt=(
+    "$(tget "@sysbat-normal-fmt0" "${default_normal_fmt[0]}")"
+    "$(tget "@sysbat-normal-fmt1" "${default_normal_fmt[1]}")"
+    "$(tget "@sysbat-normal-fmt2" "${default_normal_fmt[2]}")"
+    "$(tget "@sysbat-normal-fmt3" "${default_normal_fmt[3]}")"
+    "$(tget "@sysbat-normal-fmt4" "${default_normal_fmt[4]}")"
+    "$(tget "@sysbat-normal-fmt5" "${default_normal_fmt[5]}")"
+    "$(tget "@sysbat-normal-fmt6" "${default_normal_fmt[6]}")"
+    "$(tget "@sysbat-normal-fmt7" "${default_normal_fmt[7]}")"
+)
+export conf_simple_fmt=(
+    "$(tget "@sysbat-simple-fmt0" "${default_simple_fmt[0]}")"
+    "$(tget "@sysbat-simple-fmt1" "${default_simple_fmt[1]}")"
+    "$(tget "@sysbat-simple-fmt2" "${default_simple_fmt[2]}")"
+    "$(tget "@sysbat-simple-fmt3" "${default_simple_fmt[3]}")"
+    "$(tget "@sysbat-simple-fmt4" "${default_simple_fmt[4]}")"
+    "$(tget "@sysbat-simple-fmt5" "${default_simple_fmt[5]}")"
+    "$(tget "@sysbat-simple-fmt6" "${default_simple_fmt[6]}")"
+    "$(tget "@sysbat-simple-fmt7" "${default_simple_fmt[7]}")"
+)

@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# ==================================================================
+#   tmux-sysfs-battery/rm-config
+#   Remove the tmux options for 'tmux-sysfs-battery'.
+# ==================================================================
+
+function tget() {
+    local opt="$1"
+    local opt_decorated="\e[1m\e[93m${opt}\e[0m"
+    local value="$(tmux show-option -gqv "$opt")"
+    local len="$(expr "$2" "+" "16")"
+
+    local appended="${opt_decorated} ${value}"
+
+    [[ ${#appended} -gt ${len} ]]\
+        && echo -e "${appended:0:${len}}..."\
+        || echo -e "${appended:0:${len}}"
+}
+
+function trm() {
+    tmux set-option -gq "$1" ""
+}
+
+function rm-options() {
+    trm "@sysbat-battery-name"
+    trm "@sysbat-capacity-threshold0"
+    trm "@sysbat-capacity-threshold1"
+    trm "@sysbat-capacity-threshold2"
+    trm "@sysbat-simple-threshold"
+
+    trm "@sysbat-normal-fmt0"
+    trm "@sysbat-normal-fmt1"
+    trm "@sysbat-normal-fmt2"
+    trm "@sysbat-normal-fmt3"
+    trm "@sysbat-normal-fmt4"
+    trm "@sysbat-normal-fmt5"
+    trm "@sysbat-normal-fmt6"
+    trm "@sysbat-normal-fmt7"
+
+    trm "@sysbat-simple-fmt0"
+    trm "@sysbat-simple-fmt1"
+    trm "@sysbat-simple-fmt2"
+    trm "@sysbat-simple-fmt3"
+    trm "@sysbat-simple-fmt4"
+    trm "@sysbat-simple-fmt5"
+    trm "@sysbat-simple-fmt6"
+    trm "@sysbat-simple-fmt7"
+    printf "All options removed successfully.\n\n"
+}
+
+function show-all() {
+    local width="$(stty size | awk -F" " '{print $2}')"
+    local len="$(expr "$width" "-" "4")"
+    tget "@sysbat-battery-name" "$len"
+    tget "@sysbat-capacity-threshold0" "$len"
+    tget "@sysbat-capacity-threshold1" "$len"
+    tget "@sysbat-capacity-threshold2" "$len"
+    tget "@sysbat-simple-threshold" "$len"
+
+    tget "@sysbat-normal-fmt0" "$len"
+    tget "@sysbat-normal-fmt1" "$len"
+    tget "@sysbat-normal-fmt2" "$len"
+    tget "@sysbat-normal-fmt3" "$len"
+    tget "@sysbat-normal-fmt4" "$len"
+    tget "@sysbat-normal-fmt5" "$len"
+    tget "@sysbat-normal-fmt6" "$len"
+    tget "@sysbat-normal-fmt7" "$len"
+
+    tget "@sysbat-simple-fmt0" "$len"
+    tget "@sysbat-simple-fmt1" "$len"
+    tget "@sysbat-simple-fmt2" "$len"
+    tget "@sysbat-simple-fmt3" "$len"
+    tget "@sysbat-simple-fmt4" "$len"
+    tget "@sysbat-simple-fmt5" "$len"
+    tget "@sysbat-simple-fmt6" "$len"
+    tget "@sysbat-simple-fmt7" "$len"
+    printf "\n"
+}
+
+function main() {
+    printf "The following options are used in the config of "
+    printf "\e[1mtmux-sysfs-battery\e[0m plugin.\n\n"
+    show-all
+
+    printf "All of them \e[91m\e[1mwill be removed\e[0m "
+    printf "for current session.\n"
+    printf "Are you sure? (y/n) --- "
+    read -r response
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]
+    then
+        printf "\n"
+        rm-options
+    else
+        printf "\nCancled.\n\n"
+    fi
+}
+main
+
